@@ -57,4 +57,17 @@ public class VeterinarioDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "VeterinarioDTO{"
+                + "id=" + id
+                + ", nif='" + nif + '\''
+                + ", nombre='" + nombre + '\''
+                + ", direccion='" + direccion + '\''
+                + ", telefono='" + telefono + '\''
+                + ", email='" + email + '\''
+                + '}';
+    }
+
 }

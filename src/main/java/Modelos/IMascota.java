@@ -12,10 +12,10 @@ public interface IMascota {
     MascotaDTO findById(int id) throws SQLException;
 
     // Metodo para insertar un registro
-    int insertMascota(MascotaDTO mascota) throws SQLException;
+    Integer insertMascota(MascotaDTO mascota) throws SQLException;
     
     // Metodo para insertar varias mascotas
-    int insertMascota(List<MascotaDTO> lista) throws SQLException;
+    Integer insertMascota(List<MascotaDTO> lista) throws SQLException;
 
     // Metodo para borrar una mascota específica
     int deleteMascota(int idMascota) throws SQLException;

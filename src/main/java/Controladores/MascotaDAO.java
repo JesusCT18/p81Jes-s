@@ -65,29 +65,46 @@ public class MascotaDAO implements IMascota {
     }
 
     @Override
-    public int insertMascota(MascotaDTO mascota) throws SQLException {
+    public Integer insertMascota(MascotaDTO mascota) throws SQLException {
+        // Consulta SQL para insertar una nueva mascota en la base de datos
         String sql = "INSERT INTO mascota (numero_chip, nombre, peso, fecha_nacimiento, tipo, id_veterinario) VALUES (?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement prest = con.prepareStatement(sql)) {
+            // Asignar el número de chip (almacenado como String)
             prest.setString(1, mascota.getNumeroChip());
+
+            // Asignar el nombre de la mascota (String)
             prest.setString(2, mascota.getNombre());
+
+            // Asignar el peso de la mascota (double)
             prest.setDouble(3, mascota.getPeso());
 
-            // Asegúrate de convertir correctamente java.util.Date a java.sql.Date
+            // Manejar la fecha de nacimiento
             if (mascota.getFechaNacimiento() != null) {
-                java.sql.Date sqlDate = new java.sql.Date(mascota.getFechaNacimiento().getTime());
-                prest.setDate(4, sqlDate);  // Usamos el constructor de java.sql.Date que toma un long
+                java.sql.Date sqlDate = new java.sql.Date(mascota.getFechaNacimiento().getTime()); // Convertir a java.sql.Date
+                prest.setDate(4, sqlDate);  // Asignamos la fecha en el formato correcto para SQL
             } else {
-                prest.setNull(4, java.sql.Types.DATE);  // Si la fecha es nula, asignamos null
+                prest.setNull(4, java.sql.Types.DATE);  // Si la fecha es null, asignamos NULL a la base de datos
             }
 
+            // Asignar el tipo de la mascota (String)
             prest.setString(5, mascota.getTipo());
-            prest.setInt(6, mascota.getIdVeterinario());
+
+            // Manejo del id_veterinario (puede ser null)
+            Integer idVeterinario = mascota.getIdVeterinario();
+            if (idVeterinario != null) {
+                prest.setInt(6, idVeterinario); // Si idVeterinario no es null, lo asignamos como entero
+            } else {
+                prest.setNull(6, java.sql.Types.INTEGER);  // Si idVeterinario es null, asignamos NULL en la base de datos
+            }
+
+            // Ejecutar la inserción en la base de datos y devolver el número de filas afectadas
             return prest.executeUpdate();
         }
     }
 
     @Override
-    public int insertMascota(List<MascotaDTO> lista) throws SQLException {
+    public Integer insertMascota(List<MascotaDTO> lista) throws SQLException {
         int rows = 0;
         for (MascotaDTO m : lista) {
             rows += insertMascota(m);

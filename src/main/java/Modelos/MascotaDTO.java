@@ -10,7 +10,7 @@ public class MascotaDTO {
     private double peso;
     private Date fechaNacimiento;
     private String tipo;
-    private int idVeterinario; // Relacion con Veterinario
+    private Integer idVeterinario; // Relacion con Veterinario
 
     // Getters y setters
     public int getId() {
@@ -61,11 +61,25 @@ public class MascotaDTO {
         this.tipo = tipo;
     }
 
-    public int getIdVeterinario() {
+    public Integer getIdVeterinario() {
         return idVeterinario;
     }
 
-    public void setIdVeterinario(int idVeterinario) {
+    public void setIdVeterinario(Integer idVeterinario) {
         this.idVeterinario = idVeterinario;
     }
+
+    @Override
+    public String toString() {
+        return "MascotaDTO{"
+                + "id=" + id
+                + ", numeroChip='" + numeroChip + '\''
+                + ", nombre='" + nombre + '\''
+                + ", peso=" + peso
+                + ", fechaNacimiento=" + fechaNacimiento
+                + ", tipo='" + tipo + '\''
+                + ", idVeterinario=" + idVeterinario
+                + '}';
+    }
+
 }
