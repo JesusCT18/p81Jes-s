@@ -5,10 +5,17 @@ import Modelos.VeterinarioDTO;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Scanner;
-import java.sql.SQLException;
 
 public class MainPrueba {
+
     public static void main(String[] args) {
+        
+        MascotaDTO m1 = new MascotaDTO();
+       // VeterinarioDTO v1 = new VeterinarioDTO(1,"totis","peo","alaakbar","telefons","l@gmail.com");
+        System.out.println(m1);
+        //System.out.println(v1);
+        
+        
         Scanner scanner = new Scanner(System.in);
         MascotaDAO mascotaDAO = new MascotaDAO();
         VeterinarioDAO veterinarioDAO = new VeterinarioDAO();
@@ -18,6 +25,7 @@ public class MainPrueba {
             while (true) {  // Bucle infinito, solo se sale cuando el usuario elige la opción 9
                 // Menú principal
                 System.out.println("\n--- MENÚ ---");
+                
                 System.out.println("1. Ver todos los veterinarios");
                 System.out.println("2. Ver todas las mascotas");
                 System.out.println("3. Insertar veterinario");
@@ -98,6 +106,22 @@ public class MainPrueba {
                         // Convertir LocalDate a java.sql.Date
                         Date fechaNacimientoSQL = Date.valueOf(fechaNacimiento);
 
+                        // Mostrar los veterinarios disponibles
+                        System.out.println("---- Veterinarios disponibles ----");
+                        for (VeterinarioDTO v : veterinarioDAO.getAll()) {
+                            System.out.println(v.getId() + ". " + v.getNombre());  // Muestra el ID y nombre del veterinario
+                        }
+
+                        // Seleccionar un veterinario
+                        System.out.print("Selecciona el ID del veterinario para esta mascota (o 0 para no asignar veterinario): ");
+                        int idVeterinario = scanner.nextInt();
+                        scanner.nextLine();  // Limpiar el buffer
+
+                        // Si el usuario ingresa 0, se asignará NULL (sin veterinario)
+                        if (idVeterinario == 0) {
+                            idVeterinario = -1;  // Esto puede indicar que no hay veterinario asignado
+                        }
+
                         // Crear la mascota
                         MascotaDTO mascota = new MascotaDTO();
                         mascota.setNumeroChip(numeroChip);
@@ -105,7 +129,7 @@ public class MainPrueba {
                         mascota.setPeso(peso);
                         mascota.setFechaNacimiento(fechaNacimientoSQL);
                         mascota.setTipo(tipo);
-                        mascota.setIdVeterinario(1);  // Suponemos que el veterinario tiene ID 1 para la prueba
+                        mascota.setIdVeterinario(idVeterinario == -1 ? null : idVeterinario);  // Si no hay veterinario asignado, se pone null
 
                         // Insertar Mascota
                         int filasInsertadasMascota = mascotaDAO.insertMascota(mascota);
