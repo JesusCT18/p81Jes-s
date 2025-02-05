@@ -4,7 +4,6 @@ import java.sql.Connection;
 import Conexion.Conexion;
 import Modelos.MascotaDTO;
 import Modelos.IMascota;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

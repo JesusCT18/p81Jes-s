@@ -26,6 +26,8 @@ public class Programa {
                     + "7. Eliminar veterinario\n"
                     + "8. Actualizar mascota\n"
                     + "9. Actualizar veterinario\n"
+                    + "10. Buscar mascota por ID\n"
+                    + "11. Buscar veterinario por ID\n"
                     + "0. Salir";
 
             String opcionStr = JOptionPane.showInputDialog(null, menu, "Menú Principal", JOptionPane.INFORMATION_MESSAGE);
@@ -58,6 +60,12 @@ public class Programa {
                     break;
                 case 9:
                     actualizarVeterinario();
+                    break;
+                case 10:
+                    buscarMascotaPorId();
+                    break;
+                case 11:
+                    buscarVeterinarioPorId();
                     break;
                 case 0:
                     JOptionPane.showMessageDialog(null, "Saliendo del programa...");
@@ -262,6 +270,36 @@ public class Programa {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al actualizar el veterinario: " + e.getMessage());
+        }
+    }
+
+    // Buscar mascota por ID
+    private static void buscarMascotaPorId() {
+        try {
+            int idMascota = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID de la mascota a buscar:"));
+            MascotaDTO mascota = mascotaDAO.findById(idMascota);
+            if (mascota != null) {
+                JOptionPane.showMessageDialog(null, "Mascota encontrada: " + mascota.getNombre() + " (" + mascota.getTipo() + ")");
+            } else {
+                JOptionPane.showMessageDialog(null, "La mascota no existe.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar la mascota: " + e.getMessage());
+        }
+    }
+
+    // Buscar veterinario por ID
+    private static void buscarVeterinarioPorId() {
+        try {
+            int idVeterinario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del veterinario a buscar:"));
+            VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
+            if (veterinario != null) {
+                JOptionPane.showMessageDialog(null, "Veterinario encontrado: " + veterinario.getNombre());
+            } else {
+                JOptionPane.showMessageDialog(null, "El veterinario no existe.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar el veterinario: " + e.getMessage());
         }
     }
 }
