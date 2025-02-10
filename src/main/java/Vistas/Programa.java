@@ -266,9 +266,13 @@ public class Programa {
                 double nuevoPeso = Double.parseDouble(JOptionPane.showInputDialog("Ingrese nuevo peso para la mascota:"));
                 String nuevaFechaStr = JOptionPane.showInputDialog("Ingrese nueva fecha de nacimiento (yyyy-mm-dd):");
                 java.sql.Date nuevaFecha = java.sql.Date.valueOf(nuevaFechaStr);
+                String nuevoChip = JOptionPane.showInputDialog("Ingrese el nuevo número de chip para la mascota:");
                 mascota.setNombre(nuevoNombre);
                 mascota.setPeso(nuevoPeso);
                 mascota.setFechaNacimiento(nuevaFecha);
+                mascota.setNumeroChip(nuevoChip); // Establecer el nuevo número de chip
+
+                // Actualizar la mascota en la base de datos
                 mascotaDAO.updateMascota(idMascota, mascota);
                 JOptionPane.showMessageDialog(null, "Mascota actualizada exitosamente.");
             } else {
