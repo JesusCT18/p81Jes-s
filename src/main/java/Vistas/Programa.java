@@ -19,15 +19,15 @@ public class Programa {
             String menu = "---- Menú ----\n"
                     + "1. Listar mascotas\n"
                     + "2. Listar veterinarios\n"
-                    + "3. Agregar mascota\n"
-                    + "4. Agregar veterinario\n"
-                    + "5. Asignar veterinario a mascota\n"
-                    + "6. Eliminar mascota\n"
-                    + "7. Eliminar veterinario\n"
-                    + "8. Actualizar mascota\n"
-                    + "9. Actualizar veterinario\n"
-                    + "10. Buscar mascota por ID\n"
-                    + "11. Buscar veterinario por ID\n"
+                    + "3. Buscar mascota por ID\n"
+                    + "4. Buscar veterinario por ID\n"
+                    + "5. Agregar mascota\n"
+                    + "6. Agregar veterinario\n"
+                    + "7. Asignar veterinario a mascota\n"
+                    + "8. Eliminar mascota\n"
+                    + "9. Eliminar veterinario\n"
+                    + "10. Actualizar mascota\n"
+                    + "11. Actualizar veterinario\n"
                     + "0. Salir";
 
             String opcionStr = JOptionPane.showInputDialog(null, menu, "Menú Principal", JOptionPane.INFORMATION_MESSAGE);
@@ -41,31 +41,31 @@ public class Programa {
                     listarVeterinarios();
                     break;
                 case 3:
-                    agregarMascota();
-                    break;
-                case 4:
-                    agregarVeterinario();
-                    break;
-                case 5:
-                    asignarVeterinario();
-                    break;
-                case 6:
-                    eliminarMascota();
-                    break;
-                case 7:
-                    eliminarVeterinario();
-                    break;
-                case 8:
-                    actualizarMascota();
-                    break;
-                case 9:
-                    actualizarVeterinario();
-                    break;
-                case 10:
                     buscarMascotaPorId();
                     break;
-                case 11:
+                case 4:
                     buscarVeterinarioPorId();
+                    break;
+                case 5:
+                    agregarMascota();
+                    break;
+                case 6:
+                    agregarVeterinario();
+                    break;
+                case 7:
+                    asignarVeterinario();
+                    break;
+                case 8:
+                    eliminarMascota();
+                    break;
+                case 9:
+                    eliminarVeterinario();
+                    break;
+                case 10:
+                    actualizarMascota();
+                    break;
+                case 11:
+                    actualizarVeterinario();
                     break;
                 case 0:
                     JOptionPane.showMessageDialog(null, "Saliendo del programa...");
@@ -102,6 +102,36 @@ public class Programa {
             JOptionPane.showMessageDialog(null, message.toString());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al listar los veterinarios: " + e.getMessage());
+        }
+    }
+
+    // Buscar mascota por ID
+    private static void buscarMascotaPorId() {
+        try {
+            int idMascota = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID de la mascota a buscar:"));
+            MascotaDTO mascota = mascotaDAO.findById(idMascota);
+            if (mascota != null) {
+                JOptionPane.showMessageDialog(null, "Mascota encontrada: " + mascota.getNombre() + " (" + mascota.getTipo() + ")");
+            } else {
+                JOptionPane.showMessageDialog(null, "La mascota no existe.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar la mascota: " + e.getMessage());
+        }
+    }
+
+    // Buscar veterinario por ID
+    private static void buscarVeterinarioPorId() {
+        try {
+            int idVeterinario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del veterinario a buscar:"));
+            VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
+            if (veterinario != null) {
+                JOptionPane.showMessageDialog(null, "Veterinario encontrado: " + veterinario.getNombre());
+            } else {
+                JOptionPane.showMessageDialog(null, "El veterinario no existe.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al buscar el veterinario: " + e.getMessage());
         }
     }
 
@@ -273,33 +303,4 @@ public class Programa {
         }
     }
 
-    // Buscar mascota por ID
-    private static void buscarMascotaPorId() {
-        try {
-            int idMascota = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID de la mascota a buscar:"));
-            MascotaDTO mascota = mascotaDAO.findById(idMascota);
-            if (mascota != null) {
-                JOptionPane.showMessageDialog(null, "Mascota encontrada: " + mascota.getNombre() + " (" + mascota.getTipo() + ")");
-            } else {
-                JOptionPane.showMessageDialog(null, "La mascota no existe.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al buscar la mascota: " + e.getMessage());
-        }
-    }
-
-    // Buscar veterinario por ID
-    private static void buscarVeterinarioPorId() {
-        try {
-            int idVeterinario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del veterinario a buscar:"));
-            VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
-            if (veterinario != null) {
-                JOptionPane.showMessageDialog(null, "Veterinario encontrado: " + veterinario.getNombre());
-            } else {
-                JOptionPane.showMessageDialog(null, "El veterinario no existe.");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al buscar el veterinario: " + e.getMessage());
-        }
-    }
 }
