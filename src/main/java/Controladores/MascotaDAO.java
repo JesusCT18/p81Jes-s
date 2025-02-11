@@ -151,6 +151,14 @@ public class MascotaDAO implements IMascota {
         }
     }
 
+    public int desasignarVeterinario(int idVeterinario) throws SQLException {
+        String sql = "UPDATE mascota SET id_veterinario = NULL WHERE id_veterinario = ?";
+        try (PreparedStatement prest = con.prepareStatement(sql)) {
+            prest.setInt(1, idVeterinario);
+            return prest.executeUpdate();
+        }
+    }
+
     @Override
     public List<MascotaDTO> getMascotasByVeterinario(int idVeterinario) throws SQLException {
         List<MascotaDTO> lista = new ArrayList<>();

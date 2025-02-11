@@ -10,7 +10,7 @@ public class MascotaDTO {
     private double peso;
     private Date fechaNacimiento;
     private String tipo;
-    private Integer idVeterinario; // Relacion con Veterinario
+    private Integer idVeterinario; 
 
     // Getters y setters
     public int getId() {

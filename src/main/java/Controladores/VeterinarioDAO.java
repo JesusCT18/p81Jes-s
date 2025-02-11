@@ -10,6 +10,7 @@ import java.util.List;
 import Conexion.Conexion;
 import Modelos.VeterinarioDTO;
 import Modelos.IVeterinario;
+import Modelos.MascotaDTO;
 
 public class VeterinarioDAO implements IVeterinario {
 
@@ -98,15 +99,39 @@ public class VeterinarioDAO implements IVeterinario {
     }
 
     @Override
-    public int deleteVeterinarios() throws SQLException {  // Implementamos el método que falta
-        String sql = "DELETE FROM veterinario";
-        int nfilas = 0;
+    public int deleteVeterinarios() throws SQLException {
+        MascotaDAO mascotaDAO = new MascotaDAO(); // Crear instancia de MascotaDAO
 
+        String sqlSelectVeterinarios = "SELECT id FROM veterinario";
         try (Statement st = con.createStatement()) {
-            nfilas = st.executeUpdate(sql);
+            ResultSet rs = st.executeQuery(sqlSelectVeterinarios);
+
+            while (rs.next()) {
+                int idVeterinario = rs.getInt("id");
+
+                // Obtener las mascotas asociadas al veterinario
+                List<MascotaDTO> mascotas = mascotaDAO.getMascotasByVeterinario(idVeterinario);
+
+                // Si el veterinario tiene mascotas asignadas, actualizamos las mascotas
+                if (mascotas != null && !mascotas.isEmpty()) {
+                    for (MascotaDTO mascota : mascotas) {
+                        // Actualizamos el campo idVeterinario de la mascota a null
+                        mascota.setIdVeterinario(null);
+                        // Actualizamos la mascota en la base de datos
+                        mascotaDAO.updateMascota(mascota.getId(), mascota);
+                    }
+                }
+
+                // Despues de actualizar las mascotas, procedemos a eliminar al veterinario
+                String sqlDeleteVeterinario = "DELETE FROM veterinario WHERE id = ?";
+                try (PreparedStatement prest = con.prepareStatement(sqlDeleteVeterinario)) {
+                    prest.setInt(1, idVeterinario);
+                    prest.executeUpdate();
+                }
+            }
         }
 
-        return nfilas;
+        return 1; // Si todo se elimino correctamente
     }
 
     @Override
