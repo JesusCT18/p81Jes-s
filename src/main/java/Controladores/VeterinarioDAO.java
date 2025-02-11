@@ -43,27 +43,24 @@ public class VeterinarioDAO implements IVeterinario {
 
     @Override
     public VeterinarioDTO findById(int id) throws SQLException {
-        ResultSet res = null;
-        VeterinarioDTO veterinario = new VeterinarioDTO();
-
-        String sql = "SELECT * FROM veterinario WHERE id=?";
+        String sql = "SELECT * FROM veterinario WHERE id = ?";
 
         try (PreparedStatement prest = con.prepareStatement(sql)) {
             prest.setInt(1, id);
-            res = prest.executeQuery();
-
-            if (res.next()) {
-                veterinario.setId(res.getInt("id"));
-                veterinario.setNif(res.getString("nif"));
-                veterinario.setNombre(res.getString("nombre"));
-                veterinario.setDireccion(res.getString("direccion"));
-                veterinario.setTelefono(res.getString("telefono"));
-                veterinario.setEmail(res.getString("email"));
-                return veterinario;
+            try (ResultSet res = prest.executeQuery()) {
+                if (res.next()) {
+                    VeterinarioDTO veterinario = new VeterinarioDTO();
+                    veterinario.setId(res.getInt("id"));
+                    veterinario.setNif(res.getString("nif"));
+                    veterinario.setNombre(res.getString("nombre"));
+                    veterinario.setDireccion(res.getString("direccion"));
+                    veterinario.setTelefono(res.getString("telefono"));
+                    veterinario.setEmail(res.getString("email"));
+                    return veterinario;
+                }
             }
-
-            return null;
         }
+        return null; // Si no encuentra un veterinario, devuelve null
     }
 
     @Override
@@ -134,4 +131,3 @@ public class VeterinarioDAO implements IVeterinario {
         }
     }
 }
-

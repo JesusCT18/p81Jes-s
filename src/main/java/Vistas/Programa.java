@@ -20,13 +20,14 @@ public class Programa {
                     + "2. Listar veterinarios\n"
                     + "3. Buscar mascota por ID\n"
                     + "4. Buscar veterinario por ID\n"
-                    + "5. Agregar mascota\n"
-                    + "6. Agregar veterinario\n"
-                    + "7. Asignar veterinario a mascota\n"
-                    + "8. Eliminar mascota\n"
-                    + "9. Eliminar veterinario\n"
-                    + "10. Actualizar mascota\n"
-                    + "11. Actualizar veterinario\n"
+                    + "5. Mostrar mascotas por veterinario\n" // Nueva opción
+                    + "6. Agregar mascota\n"
+                    + "7. Agregar veterinario\n"
+                    + "8. Asignar veterinario a mascota\n"
+                    + "9. Eliminar mascota\n"
+                    + "10. Eliminar veterinario\n"
+                    + "11. Actualizar mascota\n"
+                    + "12. Actualizar veterinario\n"
                     + "0. Salir";
 
             String opcionStr = JOptionPane.showInputDialog(null, menu, "Menú Principal", JOptionPane.INFORMATION_MESSAGE);
@@ -51,24 +52,27 @@ public class Programa {
                     buscarVeterinarioPorId();
                     break;
                 case 5:
-                    agregarMascota();
+                    mostrarMascotasPorVeterinario(); // Nueva opción
                     break;
                 case 6:
-                    agregarVeterinario();
+                    agregarMascota();
                     break;
                 case 7:
-                    asignarVeterinario();
+                    agregarVeterinario();
                     break;
                 case 8:
-                    eliminarMascota();
+                    asignarVeterinario();
                     break;
                 case 9:
-                    eliminarVeterinario();
+                    eliminarMascota();
                     break;
                 case 10:
-                    actualizarMascota();
+                    eliminarVeterinario();
                     break;
                 case 11:
+                    actualizarMascota();
+                    break;
+                case 12:
                     actualizarVeterinario();
                     break;
                 case 0:
@@ -151,6 +155,34 @@ public class Programa {
         }
     }
 
+    // Método para mostrar las mascotas asignadas a un veterinario
+    private static void mostrarMascotasPorVeterinario() {
+        try {
+            String inputId = JOptionPane.showInputDialog("Ingrese el ID del veterinario para ver sus mascotas:");
+            if (inputId == null) {
+                return;
+            }
+            int idVeterinario = Integer.parseInt(inputId);
+
+            // Obtener las mascotas asignadas al veterinario
+            List<MascotaDTO> mascotas = mascotaDAO.getMascotasByVeterinario(idVeterinario);
+
+            if (mascotas.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No hay mascotas asignadas a este veterinario.");
+            } else {
+                StringBuilder message = new StringBuilder("Mascotas asignadas al veterinario:\n");
+                for (MascotaDTO m : mascotas) {
+                    message.append(m.getId()).append(": ").append(m.getNombre()).append(" (" + m.getTipo() + ")\n");
+                }
+                JOptionPane.showMessageDialog(null, message.toString());
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al obtener las mascotas del veterinario: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "ID inválido.");
+        }
+    }
+
     private static void agregarMascota() {
         try {
             String nombre = JOptionPane.showInputDialog("Ingrese nombre de la mascota:");
@@ -220,11 +252,11 @@ public class Programa {
         try {
             String nif = JOptionPane.showInputDialog("Ingrese NIF del veterinario:");
             if (nif == null) {
-                return;  
+                return;
             }
             String nombre = JOptionPane.showInputDialog("Ingrese nombre del veterinario:");
             if (nombre == null || nombre.trim().isEmpty()) {
-                return;  
+                return;
             }
             String direccion = JOptionPane.showInputDialog("Ingrese dirección del veterinario:");
             if (direccion == null || direccion.trim().isEmpty()) {
@@ -264,30 +296,45 @@ public class Programa {
     // Asignar un veterinario a una mascota
     private static void asignarVeterinario() {
         try {
+            // Solicitar ID de la mascota
             String inputIdMascota = JOptionPane.showInputDialog("Ingrese el ID de la mascota a asignar:");
             if (inputIdMascota == null) {
                 return;
             }
             int idMascota = Integer.parseInt(inputIdMascota);
 
+            // Solicitar ID del veterinario
             String inputIdVeterinario = JOptionPane.showInputDialog("Ingrese el ID del veterinario a asignar:");
             if (inputIdVeterinario == null) {
                 return;
             }
             int idVeterinario = Integer.parseInt(inputIdVeterinario);
 
+            // Verificar si la mascota existe
             MascotaDTO mascota = mascotaDAO.findById(idMascota);
-            if (mascota != null) {
-                mascota.setIdVeterinario(idVeterinario);
-                mascotaDAO.updateMascota(idMascota, mascota);
-                JOptionPane.showMessageDialog(null, "Veterinario asignado a la mascota.");
-            } else {
-                JOptionPane.showMessageDialog(null, "La mascota no existe.");
+            if (mascota == null) {
+                JOptionPane.showMessageDialog(null, "La mascota con ID " + idMascota + " no existe.");
+                return;
             }
+
+            // Verificar si el veterinario existe
+            VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
+            if (veterinario == null) {
+                JOptionPane.showMessageDialog(null, "El veterinario con ID " + idVeterinario + " no existe.");
+                return;
+            }
+
+            // Si todo es válido, asignar el veterinario a la mascota
+            mascota.setIdVeterinario(idVeterinario);
+            mascotaDAO.updateMascota(idMascota, mascota);
+
+            // Mensaje de éxito
+            JOptionPane.showMessageDialog(null, "Veterinario asignado correctamente.");
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al asignar veterinario: " + e.getMessage());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "ID inválido.");
+            JOptionPane.showMessageDialog(null, "ID inválido. Debe ser un número.");
         }
     }
 
@@ -335,7 +382,7 @@ public class Programa {
         try {
             int idMascota = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID de la mascota a actualizar:"));
             if (idMascota <= 0) {
-                return;  
+                return;
             }
             MascotaDTO mascota = mascotaDAO.findById(idMascota);
             if (mascota != null) {
@@ -381,7 +428,7 @@ public class Programa {
         try {
             int idVeterinario = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del veterinario a actualizar:"));
             if (idVeterinario <= 0) {
-                return;  
+                return;
             }
             VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
             if (veterinario != null) {
@@ -421,5 +468,4 @@ public class Programa {
             JOptionPane.showMessageDialog(null, "El ID del veterinario debe ser un número entero.");
         }
     }
-
 }
