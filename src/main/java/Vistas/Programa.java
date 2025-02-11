@@ -20,7 +20,7 @@ public class Programa {
                     + "2. Listar veterinarios\n"
                     + "3. Buscar mascota por ID\n"
                     + "4. Buscar veterinario por ID\n"
-                    + "5. Mostrar mascotas por veterinario\n" // Nueva opción
+                    + "5. Mostrar mascotas por veterinario\n" 
                     + "6. Agregar mascota\n"
                     + "7. Agregar veterinario\n"
                     + "8. Asignar veterinario a mascota\n"
@@ -52,7 +52,7 @@ public class Programa {
                     buscarVeterinarioPorId();
                     break;
                 case 5:
-                    mostrarMascotasPorVeterinario(); // Nueva opción
+                    mostrarMascotasPorVeterinario(); 
                     break;
                 case 6:
                     agregarMascota();
@@ -155,7 +155,7 @@ public class Programa {
         }
     }
 
-    // Método para mostrar las mascotas asignadas a un veterinario
+    // Metodo para mostrar las mascotas asignadas a un veterinario
     private static void mostrarMascotasPorVeterinario() {
         try {
             String inputId = JOptionPane.showInputDialog("Ingrese el ID del veterinario para ver sus mascotas:");
@@ -234,7 +234,7 @@ public class Programa {
             nuevaMascota.setNumeroChip(numeroChip);
             nuevaMascota.setIdVeterinario(idVeterinario);
 
-            // Inserción de la mascota en la base de datos
+            // Insercion de la mascota en la base de datos
             int filasInsertadas = mascotaDAO.insertMascota(nuevaMascota);
             if (filasInsertadas > 0) {
                 JOptionPane.showMessageDialog(null, "Mascota agregada exitosamente.");
@@ -324,11 +324,11 @@ public class Programa {
                 return;
             }
 
-            // Si todo es válido, asignar el veterinario a la mascota
+            // Si todo es valido, asignar el veterinario a la mascota
             mascota.setIdVeterinario(idVeterinario);
             mascotaDAO.updateMascota(idMascota, mascota);
 
-            // Mensaje de éxito
+            // Mensaje de exito
             JOptionPane.showMessageDialog(null, "Veterinario asignado correctamente.");
 
         } catch (SQLException e) {
