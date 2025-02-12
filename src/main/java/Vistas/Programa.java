@@ -352,9 +352,12 @@ public class Programa {
     private static void eliminarMascota() {
         try {
             String inputId = JOptionPane.showInputDialog("Ingrese el ID de la mascota a eliminar:");
-            if (inputId == null) {
-                return;
+
+            if (inputId == null || inputId.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se ingreso ningun ID. Volviendo al menu...");
+                return;  
             }
+
             int idMascota = Integer.parseInt(inputId);
 
             int filasEliminadas = mascotaDAO.deleteMascota(idMascota);
@@ -365,6 +368,8 @@ public class Programa {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al eliminar la mascota");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El ID de la mascota debe ser un número entero.");
         }
     }
 
