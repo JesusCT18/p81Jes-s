@@ -30,10 +30,13 @@ public class Programa {
                     + "12. Actualizar veterinario\n"
                     + "0. Salir";
 
-            String opcionStr = JOptionPane.showInputDialog(null, menu, "Menú Principal", JOptionPane.INFORMATION_MESSAGE);
+            String opcionStr = JOptionPane.showInputDialog(null, menu, "Menu Principal", JOptionPane.INFORMATION_MESSAGE);
             if (opcionStr == null) {
                 JOptionPane.showMessageDialog(null, "Saliendo del programa...");
                 System.exit(0); // Salir del programa si se presiona cancelar
+            } else if (opcionStr.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debes elegir una de las opciones.");
+                continue; // Vuelve a mostrar el menu si no se ha seleccionado nada
             }
 
             int opcion = Integer.parseInt(opcionStr);
@@ -80,7 +83,7 @@ public class Programa {
                     System.exit(0);
                     break;
                 default:
-                    JOptionPane.showMessageDialog(null, "Opción no válida.");
+                    JOptionPane.showMessageDialog(null, "Opcion no valida.");
             }
         }
     }
@@ -186,20 +189,23 @@ public class Programa {
     private static void agregarMascota() {
         try {
             String nombre = JOptionPane.showInputDialog("Ingrese nombre de la mascota:");
-            if (nombre == null) {
+            if (nombre == null || nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El nombre de la mascota es obligatorio.");
                 return;
             }
 
             String tipo = JOptionPane.showInputDialog("Ingrese tipo de mascota (perro, gato, otros):");
-            if (tipo == null) {
+            if (tipo == null || tipo.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El tipo de mascota es obligatorio.");
                 return;
             }
 
             // Validacion para asegurarse de que el tipo sea valido
             while (!tipo.equalsIgnoreCase("perro") && !tipo.equalsIgnoreCase("gato") && !tipo.equalsIgnoreCase("otros")) {
-                JOptionPane.showMessageDialog(null, "Tipo de mascota inválido. Ingrese 'perro', 'gato' o 'otros'.");
+                JOptionPane.showMessageDialog(null, "Tipo de mascota invalido. Ingrese 'perro', 'gato' o 'otros'.");
                 tipo = JOptionPane.showInputDialog("Ingrese tipo de mascota (perro, gato, otros):");
-                if (tipo == null) {
+                if (tipo == null || tipo.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El tipo de mascota es obligatorio.");
                     return;
                 }
             }
@@ -207,28 +213,30 @@ public class Programa {
             double peso;
             try {
                 String pesoStr = JOptionPane.showInputDialog("Ingrese peso de la mascota:");
-                if (pesoStr == null) {
+                if (pesoStr == null || pesoStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El peso de la mascota es obligatorio.");
                     return;
                 }
                 peso = Double.parseDouble(pesoStr);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Peso inválido.");
+                JOptionPane.showMessageDialog(null, "Peso invalido.");
                 return;
             }
 
             String fechaNacimientoStr = JOptionPane.showInputDialog("Ingrese fecha de nacimiento (yyyy-mm-dd):");
-            if (fechaNacimientoStr == null) {
+            if (fechaNacimientoStr == null || fechaNacimientoStr.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "La fecha de nacimiento es obligatoria.");
                 return;
             }
             java.sql.Date fechaNacimiento = java.sql.Date.valueOf(fechaNacimientoStr);
 
-            String numeroChip = JOptionPane.showInputDialog("Ingrese número de chip (alfanumérico):");
+            String numeroChip = JOptionPane.showInputDialog("Ingrese numero de chip (alfanumerico):");
             if (numeroChip == null || numeroChip.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "El número de chip no puede estar vacío.");
+                JOptionPane.showMessageDialog(null, "El numero de chip no puede estar vacio.");
                 return;
             }
 
-            String idVeterinarioStr = JOptionPane.showInputDialog("Ingrese el ID del veterinario (deje vacío si no tiene):");
+            String idVeterinarioStr = JOptionPane.showInputDialog("Ingrese el ID del veterinario (deje vacio si no tiene):");
             Integer idVeterinario = null;
 
             if (idVeterinarioStr != null && !idVeterinarioStr.trim().isEmpty()) {
@@ -244,7 +252,7 @@ public class Programa {
             nuevaMascota.setNumeroChip(numeroChip);
             nuevaMascota.setIdVeterinario(idVeterinario);
 
-            // Inserción de la mascota en la base de datos
+            // Insercion de la mascota en la base de datos
             int filasInsertadas = mascotaDAO.insertMascota(nuevaMascota);
             if (filasInsertadas > 0) {
                 JOptionPane.showMessageDialog(null, "Mascota agregada exitosamente.");
@@ -252,37 +260,45 @@ public class Programa {
                 JOptionPane.showMessageDialog(null, "No se pudo agregar la mascota.");
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al agregar la mascota");
+            JOptionPane.showMessageDialog(null, "Error al agregar la mascota.");
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "El ID veterinario debe ser un número entero.");
+            JOptionPane.showMessageDialog(null, "El ID veterinario debe ser un numero entero.");
         }
     }
 
     private static void agregarVeterinario() {
         try {
             String nif = JOptionPane.showInputDialog("Ingrese NIF del veterinario:");
-            if (nif == null) {
-                return;
-            }
-            String nombre = JOptionPane.showInputDialog("Ingrese nombre del veterinario:");
-            if (nombre == null || nombre.trim().isEmpty()) {
-                return;
-            }
-            String direccion = JOptionPane.showInputDialog("Ingrese dirección del veterinario:");
-            if (direccion == null || direccion.trim().isEmpty()) {
+            if (nif == null || nif.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El NIF es obligatorio.");
                 return;
             }
 
-            String telefono = JOptionPane.showInputDialog("Ingrese teléfono del veterinario:");
+            String nombre = JOptionPane.showInputDialog("Ingrese nombre del veterinario:");
+            if (nombre == null || nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El nombre es obligatorio.");
+                return;
+            }
+
+            String direccion = JOptionPane.showInputDialog("Ingrese direccion del veterinario:");
+            if (direccion == null || direccion.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "La direccion es obligatoria.");
+                return;
+            }
+
+            String telefono = JOptionPane.showInputDialog("Ingrese telefono del veterinario:");
             if (telefono == null || telefono.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El telefono es obligatorio.");
                 return;
             }
 
             String email = JOptionPane.showInputDialog("Ingrese email del veterinario:");
             if (email == null || email.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El email es obligatorio.");
                 return;
             }
 
+            // Crear el objeto VeterinarioDTO con los datos proporcionados
             VeterinarioDTO nuevoVeterinario = new VeterinarioDTO();
             nuevoVeterinario.setNif(nif);
             nuevoVeterinario.setNombre(nombre);
@@ -290,6 +306,7 @@ public class Programa {
             nuevoVeterinario.setTelefono(telefono);
             nuevoVeterinario.setEmail(email);
 
+            // Intentar insertar el veterinario en la base de datos
             int filasInsertadas = veterinarioDAO.insertVeterinario(nuevoVeterinario);
             if (filasInsertadas > 0) {
                 JOptionPane.showMessageDialog(null, "Veterinario agregado exitosamente.");
@@ -297,9 +314,9 @@ public class Programa {
                 JOptionPane.showMessageDialog(null, "No se pudo agregar el veterinario.");
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al agregar el veterinario");
+            JOptionPane.showMessageDialog(null, "Error al agregar el veterinario.");
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "El formato del NIF, teléfono o email no es válido.");
+            JOptionPane.showMessageDialog(null, "El formato del NIF, telefono o email no es valido.");
         }
     }
 
@@ -355,7 +372,7 @@ public class Programa {
 
             if (inputId == null || inputId.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "No se ingreso ningun ID. Volviendo al menu...");
-                return;  
+                return;
             }
 
             int idMascota = Integer.parseInt(inputId);
@@ -498,31 +515,31 @@ public class Programa {
             VeterinarioDTO veterinario = veterinarioDAO.findById(idVeterinario);
             if (veterinario != null) {
                 // Actualizar nombre
-                String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre para el veterinario:");
+                String nuevoNombre = JOptionPane.showInputDialog("Ingrese nuevo nombre para el veterinario (Deje en blanco para mantener el actual):");
                 if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
                     veterinario.setNombre(nuevoNombre);
                 }
 
                 // Actualizar direccion
-                String nuevaDireccion = JOptionPane.showInputDialog("Ingrese nueva dirección para el veterinario:");
+                String nuevaDireccion = JOptionPane.showInputDialog("Ingrese nueva dirección para el veterinario (Deje en blanco para mantener el actual):");
                 if (nuevaDireccion != null && !nuevaDireccion.trim().isEmpty()) {
                     veterinario.setDireccion(nuevaDireccion);
                 }
 
                 // Actualizar telefono
-                String nuevoTelefono = JOptionPane.showInputDialog("Ingrese nuevo teléfono para el veterinario:");
+                String nuevoTelefono = JOptionPane.showInputDialog("Ingrese nuevo teléfono para el veterinario (Deje en blanco para mantener el actual):");
                 if (nuevoTelefono != null && !nuevoTelefono.trim().isEmpty()) {
                     veterinario.setTelefono(nuevoTelefono);
                 }
 
                 // Actualizar email
-                String nuevoEmail = JOptionPane.showInputDialog("Ingrese nuevo email para el veterinario:");
+                String nuevoEmail = JOptionPane.showInputDialog("Ingrese nuevo email para el veterinario (Deje en blanco para mantener el actual):");
                 if (nuevoEmail != null && !nuevoEmail.trim().isEmpty()) {
                     veterinario.setEmail(nuevoEmail);
                 }
 
                 // Actualizar NIF
-                String nuevoNif = JOptionPane.showInputDialog("Ingrese nuevo NIF para el veterinario:");
+                String nuevoNif = JOptionPane.showInputDialog("Ingrese nuevo NIF para el veterinario (Deje en blanco para mantener el actual):");
                 if (nuevoNif != null && !nuevoNif.trim().isEmpty()) {
                     veterinario.setNif(nuevoNif);
                 }
