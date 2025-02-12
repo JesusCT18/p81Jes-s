@@ -438,11 +438,11 @@ public class Programa {
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar el veterinario: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al eliminar el veterinario: ");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "El ID del veterinario debe ser un número entero.");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: ");
         }
     }
 
@@ -493,6 +493,13 @@ public class Programa {
                     mascota.setTipo(nuevoTipo);
                 }
 
+                // Nuevo veterinario
+                String nuevoVeterinarioStr = JOptionPane.showInputDialog("Ingrese el nuevo ID del veterinario para la mascota (Deje en blanco para mantener el actual):");
+                if (nuevoVeterinarioStr != null && !nuevoVeterinarioStr.trim().isEmpty()) {
+                    Integer nuevoVeterinario = Integer.parseInt(nuevoVeterinarioStr);
+                    mascota.setIdVeterinario(nuevoVeterinario);
+                }
+
                 // Actualizar la mascota en la base de datos
                 mascotaDAO.updateMascota(idMascota, mascota);
                 JOptionPane.showMessageDialog(null, "Mascota actualizada exitosamente.");
@@ -502,7 +509,7 @@ public class Programa {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al actualizar la mascota: " + e.getMessage());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "El formato del peso o ID de la mascota no es válido.");
+            JOptionPane.showMessageDialog(null, "El formato del peso, ID de la mascota o ID del veterinario no es válido.");
         }
     }
 

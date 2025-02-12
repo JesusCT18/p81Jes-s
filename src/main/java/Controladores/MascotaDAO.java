@@ -33,7 +33,12 @@ public class MascotaDAO implements IMascota {
                 m.setPeso(res.getDouble("peso"));
                 m.setFechaNacimiento(res.getDate("fecha_nacimiento"));
                 m.setTipo(res.getString("tipo"));
-                m.setIdVeterinario(res.getInt("id_veterinario"));
+                int idVeterinario = res.getInt("id_veterinario");
+                if (res.wasNull()) {
+                    m.setIdVeterinario(null);
+                } else {
+                    m.setIdVeterinario(idVeterinario);
+                }
 
                 lista.add(m);
             }
@@ -57,7 +62,12 @@ public class MascotaDAO implements IMascota {
                 mascota.setPeso(rs.getDouble("peso"));
                 mascota.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                 mascota.setTipo(rs.getString("tipo"));
-                mascota.setIdVeterinario(rs.getInt("id_veterinario"));
+                int idVeterinario = rs.getInt("id_veterinario");
+                if (rs.wasNull()) {
+                    mascota.setIdVeterinario(null);
+                } else {
+                    mascota.setIdVeterinario(idVeterinario);
+                }
             }
         }
         return mascota;
@@ -145,7 +155,11 @@ public class MascotaDAO implements IMascota {
             }
 
             prest.setString(5, nuevosDatos.getTipo());
-            prest.setInt(6, nuevosDatos.getIdVeterinario());
+            if (nuevosDatos.getIdVeterinario() != null) {
+                prest.setInt(6, nuevosDatos.getIdVeterinario());
+            } else {
+                prest.setNull(6, java.sql.Types.INTEGER);
+            }
             prest.setInt(7, id);
             return prest.executeUpdate();
         }
@@ -174,7 +188,12 @@ public class MascotaDAO implements IMascota {
                 m.setPeso(rs.getDouble("peso"));
                 m.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                 m.setTipo(rs.getString("tipo"));
-                m.setIdVeterinario(rs.getInt("id_veterinario"));
+                int veterId = rs.getInt("id_veterinario");
+                if (rs.wasNull()) {
+                    m.setIdVeterinario(null);
+                } else {
+                    m.setIdVeterinario(veterId);
+                }
                 lista.add(m);
             }
         }
