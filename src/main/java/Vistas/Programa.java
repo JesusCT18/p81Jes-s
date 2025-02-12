@@ -24,10 +24,11 @@ public class Programa {
                     + "6. Agregar mascota\n"
                     + "7. Agregar veterinario\n"
                     + "8. Asignar veterinario a mascota\n"
-                    + "9. Eliminar mascota\n"
-                    + "10. Eliminar veterinario\n"
-                    + "11. Actualizar mascota\n"
-                    + "12. Actualizar veterinario\n"
+                    + "9. Desasignar veterinario de mascota\n"
+                    + "10. Eliminar mascota\n"
+                    + "11. Eliminar veterinario\n"
+                    + "12. Actualizar mascota\n"
+                    + "13. Actualizar veterinario\n"
                     + "0. Salir";
 
             String opcionStr = JOptionPane.showInputDialog(null, menu, "Menu Principal", JOptionPane.INFORMATION_MESSAGE);
@@ -67,15 +68,18 @@ public class Programa {
                     asignarVeterinario();
                     break;
                 case 9:
-                    eliminarMascota();
+                    desasignarVeterinario();
                     break;
                 case 10:
-                    eliminarVeterinario();
+                    eliminarMascota();
                     break;
                 case 11:
-                    actualizarMascota();
+                    eliminarVeterinario();
                     break;
                 case 12:
+                    actualizarMascota();
+                    break;
+                case 13:
                     actualizarVeterinario();
                     break;
                 case 0:
@@ -362,6 +366,36 @@ public class Programa {
             JOptionPane.showMessageDialog(null, "Error al asignar veterinario");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "ID inválido. Debe ser un número.");
+        }
+    }
+
+    private static void desasignarVeterinario() {
+        try {
+            String inputId = JOptionPane.showInputDialog("Ingrese el ID de la mascota para desasignar su veterinario:");
+            if (inputId == null || inputId.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un ID valido.");
+                return;
+            }
+            int idMascota = Integer.parseInt(inputId);
+
+            MascotaDTO mascota = mascotaDAO.findById(idMascota);
+            if (mascota == null) {
+                JOptionPane.showMessageDialog(null, "La mascota no existe.");
+                return;
+            }
+
+            if (mascota.getIdVeterinario() == null) {
+                JOptionPane.showMessageDialog(null, "Esta mascota ya no tiene veterinario asignado.");
+                return;
+            }
+
+            mascota.setIdVeterinario(null);
+            mascotaDAO.updateMascota(idMascota, mascota);
+            JOptionPane.showMessageDialog(null, "Veterinario desasignado correctamente de la mascota.");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al desasignar el veterinario.");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El ID de la mascota debe ser un numero entero.");
         }
     }
 
